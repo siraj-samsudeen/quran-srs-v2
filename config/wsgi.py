@@ -8,8 +8,12 @@ https://docs.djangoproject.com/en/3.2/howto/deployment/wsgi/
 """
 
 import os
+import sys
+import pathlib
 
 from django.core.wsgi import get_wsgi_application
+
+sys.pycache_prefix = str(pathlib.Path.home()) + "/pycache"
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
 
