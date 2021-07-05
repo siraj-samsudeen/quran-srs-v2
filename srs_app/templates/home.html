@@ -1,1 +1,33 @@
-<html>test</html>
+<html>
+<title>
+    Manage Students
+</title>
+
+<body>
+    <form method="POST">
+        {% csrf_token %}
+        <input id="add-student" name="student-name" />
+        <input type="submit">
+    </form>
+    <table>
+        <thead>
+            <tr>
+                <th>
+                    Name
+                </th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for student in students %}
+            <tr>
+                <td>
+                    {{student.name}}
+                </td>
+            </tr>
+            {% endfor %}
+
+        </tbody>
+    </table>
+</body>
+</html>

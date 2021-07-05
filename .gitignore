@@ -8,3 +8,4 @@ cypress/support
 cypress/screenshots/
 .DS_Store
 package-lock.json
+**/migrations/
