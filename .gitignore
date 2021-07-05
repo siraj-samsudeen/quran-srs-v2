@@ -9,5 +9,3 @@ cypress/screenshots/
 .DS_Store
 package-lock.json
 **/migrations/
-__pycache__
-.pytest_cache
