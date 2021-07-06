@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.urls import resolve
-from pytest_django.asserts import assertContains, assertRedirects, assertTemplateUsed
+from pytest_django.asserts import assertContains, assertTemplateUsed
 import pytest
 
 from .views import home_page
@@ -16,23 +16,19 @@ def describe_home_page():
 def describe_manage_students():
     def add_one_student(client):
         response = client.post("/", {'student-name': 'dummy_student1'})
-
-        assertRedirects(response, '/')
-
+        assertContains(response, "dummy_student1")
+        assertTemplateUsed(response, "home.html")
         assert Student.objects.count() == 1
-        new_student = Student.objects.first()
-        assert new_student.name == 'dummy_student1'
+
+        # TODO Redirect after Post
 
     def add_two_students(client):
-        client.post("/", {'student-name': 'dummy_student1'})
+        response = client.post("/", {'student-name': 'dummy_student1'})
         response = client.post("/", {'student-name': 'dummy_student2'})
-
-        assertRedirects(response, '/')
+        assertContains(response, "dummy_student1")
+        assertContains(response, "dummy_student2")
 
         assert Student.objects.count() == 2
-        students = Student.objects.all()
-        assert students[0].name == 'dummy_student1'
-        assert students[1].name == 'dummy_student2'
 
 
 def describe_student_model():
