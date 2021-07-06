@@ -18,7 +18,7 @@ from django.urls import path
 from srs_app import views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', views.home, name='home'),
-    path('students', views.student_list, name='student_list')
+    path("admin/", admin.site.urls),
+    path("", views.home, name="home"),
+    path("students", views.student_list, name="student_list"),
 ]

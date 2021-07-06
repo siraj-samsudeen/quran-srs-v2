@@ -8,9 +8,8 @@ def home(request):
 
 def student_list(request):
     if request.POST:
-        Student.objects.create(name=request.POST['student-name'])
+        Student.objects.create(name=request.POST["student-name"])
 
     students = Student.objects.all()
 
-    return render(request, "student_list.html",
-                  {'students': students})
+    return render(request, "student_list.html", {"students": students})
