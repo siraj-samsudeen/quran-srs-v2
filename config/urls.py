@@ -19,5 +19,6 @@ from srs_app import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("", views.home_page, name="home")
+    path('', views.home, name='home'),
+    path('students', views.student_list, name='student_list')
 ]

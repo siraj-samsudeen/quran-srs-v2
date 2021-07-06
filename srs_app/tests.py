@@ -1,30 +1,42 @@
 from django.test import TestCase
 from django.urls import resolve
-from pytest_django.asserts import assertContains, assertTemplateUsed
+from django.urls.base import reverse
+from pytest_django.asserts import assertContains, assertRedirects, assertTemplateUsed
 import pytest
 
-from .views import home_page
 from .models import Student
 
 
+@pytest.mark.django_db
 def describe_home_page():
-    def template_is_available(client, db):
-        assertTemplateUsed(client.get("/"), 'home.html')
+    def redirects_to_manage_students(client):
+        response = client.get("/")
+        assertRedirects(response, reverse('student_list'))
+
+    def template_is_manage_students(client):
+        response = client.get("/", follow=True)
+        assertTemplateUsed(response, 'student_list.html')
 
 
 @pytest.mark.django_db
 def describe_manage_students():
+    student_list_url = reverse("student_list")
+
     def add_one_student(client):
-        response = client.post("/", {'student-name': 'dummy_student1'})
+        response = client.post(student_list_url,
+                               {'student-name': 'dummy_student1'})
         assertContains(response, "dummy_student1")
-        assertTemplateUsed(response, "home.html")
+        assertTemplateUsed(response, "student_list.html")
+
         assert Student.objects.count() == 1
 
         # TODO Redirect after Post
 
     def add_two_students(client):
-        response = client.post("/", {'student-name': 'dummy_student1'})
-        response = client.post("/", {'student-name': 'dummy_student2'})
+        response = client.post(
+            student_list_url, {'student-name': 'dummy_student1'})
+        response = client.post(
+            student_list_url, {'student-name': 'dummy_student2'})
         assertContains(response, "dummy_student1")
         assertContains(response, "dummy_student2")
 
