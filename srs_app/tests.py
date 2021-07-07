@@ -15,45 +15,31 @@ def describe_home_page():
 
     def template_is_manage_students(client):
         response = client.get("/", follow=True)
-        assertTemplateUsed(response, "student_list.html")
+        assertTemplateUsed(response, STUDENT_LIST_TEMPLATE)
+
+
+STUDENT_LIST_TEMPLATE = "student_list.html"
+DUMMY_STUDENT = {"student-name": "dummy_student"}
 
 
 @pytest.mark.django_db
 def describe_manage_students():
     student_list_url = reverse("student_list")
 
-    def add_one_student(client):
-        response = client.post(student_list_url, {"student-name": "dummy_student1"})
-        assertContains(response, "dummy_student1")
-        assertTemplateUsed(response, "student_list.html")
+    def describe_add_student():
+        def saves_to_db(client):
+            response = client.post(student_list_url, DUMMY_STUDENT, follow=True)
+            assert Student.objects.count() == 1
+            assert Student.objects.first().name == DUMMY_STUDENT["student-name"]
 
-        assert Student.objects.count() == 1
-
-        # TODO Redirect after Post
-
-    def add_student_redirects_to_student_list(client):
-        response = client.post(
-            reverse("student_list"), {"student-name": "dummy_student1"}, follow=True
-        )
-        assertRedirects(response, reverse("student_list"))
-
-    def add_two_students(client):
-        response = client.post(student_list_url, {"student-name": "dummy_student1"})
-        response = client.post(student_list_url, {"student-name": "dummy_student2"})
-        assertContains(response, "dummy_student1")
-        assertContains(response, "dummy_student2")
-
-        assert Student.objects.count() == 2
+        def returns_valid_response_in_template(client):
+            response = client.post(student_list_url, DUMMY_STUDENT, follow=True)
+            assertContains(response, DUMMY_STUDENT["student-name"])
+            assertTemplateUsed(response, STUDENT_LIST_TEMPLATE)
 
 
 def describe_student_model():
-    def add_students(db):
-        student1 = Student.objects.create(name="dummy_student1")
+    def create(db):
+        student = Student.objects.create(name=DUMMY_STUDENT["student-name"])
         assert Student.objects.count() == 1
-
-        student2 = Student.objects.create(name="dummy_student2")
-        assert Student.objects.count() == 2
-
-        students = Student.objects.all()
-        assert student1 in students
-        assert student2 in students
+        assert student == Student.objects.first()
