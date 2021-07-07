@@ -9,6 +9,7 @@ def home(request):
 def student_list(request):
     if request.POST:
         Student.objects.create(name=request.POST["student-name"])
+        return redirect("student_list")
 
     students = Student.objects.all()
 

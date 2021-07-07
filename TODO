@@ -2,5 +2,6 @@
 Todo:
   Manage Students:
     ✔ Add 2 Students @done(21-07-05 10:12)
+    ✔ Redirect after post @done(21-07-07 08:53)
     ☐ Running FTs again populates the same students again as DB is not cleared between FTs
     ☐ Student should belong to a logged in user

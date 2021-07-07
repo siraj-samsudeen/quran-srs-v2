@@ -27,6 +27,10 @@ def describe_manage_students():
     student_list_url = reverse("student_list")
 
     def describe_add_student():
+        def redirects_after_post(client):
+            response = client.post(reverse("student_list"), DUMMY_STUDENT)
+            assertRedirects(response, reverse("student_list"))
+
         def saves_to_db(client):
             response = client.post(student_list_url, DUMMY_STUDENT, follow=True)
             assert Student.objects.count() == 1
