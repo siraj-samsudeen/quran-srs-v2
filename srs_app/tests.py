@@ -32,14 +32,14 @@ def describe_manage_students():
             assertRedirects(response, reverse("student_list"))
 
         def saves_to_db(client):
-            response = client.post(student_list_url, DUMMY_STUDENT, follow=True)
+            response = client.post(student_list_url, DUMMY_STUDENT)
             assert Student.objects.count() == 1
             assert Student.objects.first().name == DUMMY_STUDENT["student-name"]
 
         def returns_valid_response_in_template(client):
             response = client.post(student_list_url, DUMMY_STUDENT, follow=True)
-            assertContains(response, DUMMY_STUDENT["student-name"])
             assertTemplateUsed(response, STUDENT_LIST_TEMPLATE)
+            assert Student.objects.get(name=DUMMY_STUDENT["student-name"]) in response.context["students"]
 
 
 def describe_student_model():
